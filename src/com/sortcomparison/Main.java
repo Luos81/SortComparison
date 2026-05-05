@@ -11,12 +11,30 @@ public class Main {
     static int[] random;      //随机数组
 
     static {
-        // 生成函数我们稍后实现
-        ascending = generateAscending(1000000);
-        descending = generateDescending(1000000);
-        random = generateRandom(1000000);
-    }
+        String ascFile = "ascending.dat";
+        String descFile = "descending.dat";
+        String randFile = "random.dat";
 
+        if (ArrayFileUtil.fileExists(ascFile)
+                && ArrayFileUtil.fileExists(descFile)
+                && ArrayFileUtil.fileExists(randFile)) {
+            System.out.println("检测到数据文件，正在加载...");
+            ascending = ArrayFileUtil.loadArray(ascFile);
+            descending = ArrayFileUtil.loadArray(descFile);
+            random = ArrayFileUtil.loadArray(randFile);
+            System.out.println("加载完成。");
+        } else {
+            System.out.println("未找到数据文件，开始生成并保存...");
+            ascending = generateAscending(1_000_000);
+            descending = generateDescending(1_000_000);
+            random = generateRandom(1_000_000);
+
+            ArrayFileUtil.saveArray(ascending, ascFile);
+            ArrayFileUtil.saveArray(descending, descFile);
+            ArrayFileUtil.saveArray(random, randFile);
+            System.out.println("生成并保存完成。");
+        }
+    }
     // 生成 1~n 的升序数组
     static int[] generateAscending(int n) {
         int[] arr = new int[n];
